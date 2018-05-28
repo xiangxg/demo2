@@ -136,7 +136,7 @@ public class BST2<E extends Comparable<E>> {
         return cur;
     }
 
-
+    // 返回以node为根的二分搜索树的最小值所在的节点
     private Node getMinNode(Node node) {
         if (node.left == null)
             return node;
@@ -184,10 +184,15 @@ public class BST2<E extends Comparable<E>> {
         pre.left = cur.right;
         return cur;
     }
-
+    // 删除掉以node为根的二分搜索树中的最小节点
+    // 返回删除节点后新的二分搜索树的根
     private Node delMinNode(Node node) {
-        if (node.left == null)
-            return node.right;
+        if (node.left == null){
+            Node rightNode = node.right;
+            node.right = null;
+            size --;
+            return rightNode;
+        }
         node.left = delMinNode(node.left);
         return node;
     }
@@ -208,10 +213,70 @@ public class BST2<E extends Comparable<E>> {
         return node;
     }
 
-    public static void main(String[] args) {
 
+    /**
+     * 从二分搜索树中删除任意元素，从以下几种情况考虑
+     *
+     * 1.当被删除元素只有左节点时，将左节点放到被删除的位置
+     * 2.当被删除元素只有右节点时，将右节点放到被删除的位置
+     * 3.当被删除元素为叶子节点时，包含在逻辑1和2中，不用单独处理
+     * 4.当左右都有孩子节点时：找出被删除元素右子树中最小节点，因为右子树中每个节点都比被删除元素大;
+     * 也可以找出被删除元素的左子树中的最大节点
+     * @param e
+     */
+    public void remove(E e){
+        root = remove(root,e);
+    }
+
+    /**
+     * 删除在以node为根的树中值为e的节点，递归算法
+     *返回删除后的树的根
+     * @param node
+     * @param e
+     */
+     Node remove(Node node, E e) {
+        if (node == null)
+            return null;
+        if ( e.compareTo(node.e) < 0){//左子树中删除
+            node.left = remove(node.left, e);
+            return node;
+        }
+        else if ( e.compareTo(node.e) > 0){//右子树中删除
+            node.right = remove(node.right,e);
+            return node;
+        }
+        else{ //e == node.e
+            //待删除节点的左子树为null,返回右子树
+            if (node.left == null){
+                Node rightNode = node.right;
+                node.right = null;
+                size --;
+                return rightNode;
+            }
+            //待删除节点的右子树为null,返回左子树
+            if (node.right == null){
+                Node leftNode = node.left;
+                node.left = null;
+                size --;
+                return leftNode;
+            }
+            //待删除节点的左右子树均不为null,分为三步
+            /**
+             * 1.找出被删除节点的右子树中的最小（前驱）节点，或左子树中的最大（后继）节点
+             * 2.删除第一步找出的节点
+             * 3.替换被删除节点为右子树中的最小节点，并清空引用
+             */
+            Node successor = new Node(getMinNode(node.right).e);
+            successor.right = delMinNode(node.right);
+            successor.left = node.left;
+            node.right = node.left = null;
+            return  successor;
+        }
+    }
+
+    public static void main(String[] args) {
         BST2<Integer> bst = new BST2<>();
-        int[] nums = {5, 3, 6, 8, 4, 2, 7};
+        int[] nums = {5, 3, 6, 8, 4, 2, 15,7};
         for (int num : nums)
             bst.add(num);
 
@@ -223,12 +288,8 @@ public class BST2<E extends Comparable<E>> {
         // 2  4     8  //
         /////////////////
         bst.levelOrder();
-        System.out.println();
-        bst.delMinNodeNC();
-        bst.delMinNodeNC();
-        System.out.println();
+        bst.remove(8);
         bst.levelOrder();
-        System.out.println();
 
 
     }

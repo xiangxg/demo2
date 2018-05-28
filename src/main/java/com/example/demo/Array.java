@@ -121,6 +121,12 @@ public class Array<E> {
     public int getSize(){
         return  size;
     }
+
+    public void swap(int k, int parent) {
+        E temp = data[k];
+        data[k] = data[parent];
+        data[parent] = temp;
+    }
     @Override
     public String toString() {
 
@@ -163,4 +169,6 @@ public class Array<E> {
         arr.removeFirst();
         System.out.println(arr);
     }
+
+
 }
