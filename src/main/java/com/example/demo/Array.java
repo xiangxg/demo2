@@ -16,6 +16,14 @@ public class Array<E> {
         data = (E[])new Object[capacity];
     }
 
+    public Array(E[] arr) {
+        data = (E[]) new Object[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            data[i] = arr[i];
+        }
+        size = arr.length;
+    }
+
     public boolean isEmpty(){
         return size == 0;
     }
@@ -73,15 +81,15 @@ public class Array<E> {
     }
 
     public E remove(int index){
-        if (index < 0 || index > size)
+        if (index < 0 || index >= size)
             throw new IllegalArgumentException("Add fail : index is illegal ,index must between 0 and " + size);
 
         E e = data [index];
-        for (int i = index + 1; i <= size ; i++) {
+        for (int i = index + 1; i < size ; i++) {
             data[i - 1] = data[i];
         }
 
-        data[size--] = null;
+        data[--size] = null;
         if (size < (data.length >> 2) && (data.length >> 1 != 0))
             resize (data.length >> 1);
         return  e;
@@ -122,10 +130,10 @@ public class Array<E> {
         return  size;
     }
 
-    public void swap(int k, int parent) {
+    public void swap(int k, int j) {
         E temp = data[k];
-        data[k] = data[parent];
-        data[parent] = temp;
+        data[k] = data[j];
+        data[j] = temp;
     }
     @Override
     public String toString() {
