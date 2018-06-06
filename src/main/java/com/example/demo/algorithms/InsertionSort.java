@@ -6,10 +6,22 @@ package com.example.demo.algorithms;
 public class InsertionSort {
     public static void sort(Comparable [] arr){
         for (int i = 1; i < arr.length; i++) {
-            for (int j = i; j >0 ; j--) {
+            //方法一
+            /*for (int j = i; j >0 ; j--) {
                 if (arr[j].compareTo(arr[j-1]) <0)
                     swap(arr,j,j-1);
+            }*/
+            //方法二
+            /*for (int j = i; j >0 && arr[j].compareTo(arr[j-1]) <0; j--) {
+                swap(arr,j,j-1);
+            }*/
+            //方法三
+            Comparable e = arr[i];
+            int j = i;
+            for (; j >0 && arr[j-1].compareTo(e) > 0 ; j--) {
+                arr[j] = arr[j-1];
             }
+            arr[j] = e;
         }
     }
     private static void swap(Comparable[] arr, int i, int j) {
@@ -20,8 +32,8 @@ public class InsertionSort {
 
     // 测试InsertionSort
     public static void main(String[] args) {
-        int[] arr = {10,9,8,7,6,5,4,3,2,1};
-        SelectionSort.sort(arr);
+        Integer[] arr = {10,9,8,7,6,5,4,3,2,1};
+        InsertionSort.sort(arr);
         for( int i = 0 ; i < arr.length ; i ++ ){
             System.out.print(arr[i]);
             System.out.print(' ');
